@@ -1,0 +1,42 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  color: #1a1a1a;
+  background-color: #ffffff;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ── Animation 7: CTA button glow + scale ── */
+.btn-glow {
+  transition: all 200ms ease !important;
+}
+.btn-glow:hover {
+  box-shadow: 0 0 20px rgba(10, 37, 64, 0.3);
+  transform: scale(1.03);
+}
+
+/* ── Animation 2: Threat card hover ── */
+.threat-card {
+  border-left-width: 4px;
+  border-left-color: transparent;
+  transition: border-left-color 300ms ease;
+}
+.threat-card:hover {
+  border-left-color: #0a2540;
+}
