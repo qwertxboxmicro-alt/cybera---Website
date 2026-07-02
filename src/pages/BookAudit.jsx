@@ -1,7 +1,8 @@
-import { useEffect } from 'react'
-import { motion, useReducedMotion } from 'framer-motion'
+import { useEffect, useState } from 'react'
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
 import FadeIn from '../components/FadeIn'
 import GradientLine from '../components/GradientLine'
+import { SkeletonIframe } from '../components/SkeletonLoader'
 
 const checklistItems = [
   "We'll ask about your current payment and email setup (5 min)",
@@ -25,6 +26,12 @@ export default function BookAudit() {
 
   const prefersReducedMotion = useReducedMotion()
 
+  const [iframeLoading, setIframeLoading] = useState(true)
+  useEffect(() => {
+    const timer = setTimeout(() => setIframeLoading(false), 800)
+    return () => clearTimeout(timer)
+  }, [])
+
   return (
     <>
       {/* ── SECTION 1: PAGE HEADER ── */}
@@ -33,7 +40,7 @@ export default function BookAudit() {
         initial={{ opacity: 0.85 }}
         whileInView={{ opacity: 1 }}
         viewport={{ once: true, margin: '-40px' }}
-        transition={{ duration: prefersReducedMotion ? 0 : 0.4 }}
+        transition={{ duration: prefersReducedMotion ? 0 : 0.6 }}
       >
         <div className="max-w-3xl mx-auto text-center">
           <FadeIn delay={0}>
@@ -68,7 +75,7 @@ export default function BookAudit() {
         initial={{ opacity: 0.85 }}
         whileInView={{ opacity: 1 }}
         viewport={{ once: true, margin: '-40px' }}
-        transition={{ duration: prefersReducedMotion ? 0 : 0.4 }}
+        transition={{ duration: prefersReducedMotion ? 0 : 0.6 }}
       >
         <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-[38fr_62fr] gap-12 md:gap-20 items-start">
 
@@ -124,16 +131,31 @@ export default function BookAudit() {
 
           {/* RIGHT — Calendly embed */}
           <FadeIn direction="right" delay={0.1}>
-            <div className="rounded-xl overflow-hidden" style={{ minHeight: '600px' }}>
-              <iframe
-                src={import.meta.env.VITE_CALENDLY_URL}
-                width="100%"
-                height="600"
-                frameBorder="0"
-                title="Schedule your free audit"
-                style={{ border: 'none', borderRadius: '12px' }}
-              />
-            </div>
+            <AnimatePresence mode="wait">
+              {iframeLoading ? (
+                <motion.div key="iframe-skeleton" exit={{ opacity: 0 }} transition={{ duration: 0.2 }}>
+                  <SkeletonIframe />
+                </motion.div>
+              ) : (
+                <motion.div
+                  key="iframe"
+                  className="rounded-xl overflow-hidden"
+                  style={{ minHeight: '600px' }}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.4 }}
+                >
+                  <iframe
+                    src={import.meta.env.VITE_CALENDLY_URL}
+                    width="100%"
+                    height="600"
+                    frameBorder="0"
+                    title="Schedule your free audit"
+                    style={{ border: 'none', borderRadius: '12px' }}
+                  />
+                </motion.div>
+              )}
+            </AnimatePresence>
           </FadeIn>
 
         </div>
@@ -145,7 +167,7 @@ export default function BookAudit() {
         initial={{ opacity: 0.85 }}
         whileInView={{ opacity: 1 }}
         viewport={{ once: true, margin: '-40px' }}
-        transition={{ duration: prefersReducedMotion ? 0 : 0.4 }}
+        transition={{ duration: prefersReducedMotion ? 0 : 0.6 }}
       >
         <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-10 text-center">
           {reassuranceItems.map((item, i) => (

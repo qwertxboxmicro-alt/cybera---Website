@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { motion, useInView, useReducedMotion } from 'framer-motion'
+import { motion, AnimatePresence, useInView, useReducedMotion } from 'framer-motion'
 import FadeIn from '../components/FadeIn'
 import GradientLine from '../components/GradientLine'
+import { SkeletonCard } from '../components/SkeletonLoader'
 
 const problems = [
   {
@@ -37,12 +38,17 @@ const steps = [
   },
 ]
 
-/* Anim 6: per-card entrance direction */
+/* Anim 6: per-card directional entrance */
 const cardVariants = [
-  { hidden: { opacity: 0, x: -50, y: 0 }, visible: { opacity: 1, x: 0, y: 0 } },
-  { hidden: { opacity: 0, x: 0, y: -50 }, visible: { opacity: 1, x: 0, y: 0 } },
-  { hidden: { opacity: 0, x: 50,  y: 0 }, visible: { opacity: 1, x: 0, y: 0 } },
+  { hidden: { opacity: 0, x: -50 }, visible: { opacity: 1, x: 0 } },
+  { hidden: { opacity: 0, y: -30 }, visible: { opacity: 1, y: 0 } },
+  { hidden: { opacity: 0, x: 50 },  visible: { opacity: 1, x: 0 } },
 ]
+
+const cardsContainerVariants = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.12 } },
+}
 
 export default function Home() {
   useEffect(() => {
@@ -54,9 +60,12 @@ export default function Home() {
 
   const prefersReducedMotion = useReducedMotion()
 
-  /* Anim 6: cards inView ref */
-  const cardsRef = useRef(null)
-  const cardsInView = useInView(cardsRef, { once: true, margin: '-60px' })
+  /* Skeleton loading */
+  const [isLoading, setIsLoading] = useState(true)
+  useEffect(() => {
+    const timer = setTimeout(() => setIsLoading(false), 600)
+    return () => clearTimeout(timer)
+  }, [])
 
   /* Anim 5: steps sequential highlight */
   const stepsRef = useRef(null)
@@ -71,16 +80,18 @@ export default function Home() {
     return () => [t0, t1, t2].forEach(clearTimeout)
   }, [stepsInView, prefersReducedMotion])
 
+  const sectionTransition = { duration: prefersReducedMotion ? 0 : 0.6 }
+  const cardTransition = { duration: prefersReducedMotion ? 0 : 0.6, ease: 'easeOut' }
+
   return (
     <>
       {/* ── SECTION 1: HERO ── */}
-      {/* Anim 9: motion.section subtle fade-in on enter */}
       <motion.section
         className="bg-white py-[80px] md:py-[120px] px-6"
         initial={{ opacity: 0.85 }}
         whileInView={{ opacity: 1 }}
         viewport={{ once: true, margin: '-40px' }}
-        transition={{ duration: prefersReducedMotion ? 0 : 0.4 }}
+        transition={sectionTransition}
       >
         <div className="max-w-3xl mx-auto text-center">
           <FadeIn delay={0}>
@@ -96,7 +107,6 @@ export default function Home() {
             <h1 className="font-bold text-[#1A1A1A] mt-6 leading-tight text-[32px] md:text-[52px]">
               One AI Phone Call Could Cost Your Construction Company $500,000
             </h1>
-            {/* Anim 4: gradient line — centered */}
             <div className="flex justify-center">
               <GradientLine className="mt-5" />
             </div>
@@ -127,7 +137,7 @@ export default function Home() {
         initial={{ opacity: 0.85 }}
         whileInView={{ opacity: 1 }}
         viewport={{ once: true, margin: '-40px' }}
-        transition={{ duration: prefersReducedMotion ? 0 : 0.4 }}
+        transition={sectionTransition}
       >
         <div className="max-w-7xl mx-auto">
           <FadeIn>
@@ -141,55 +151,62 @@ export default function Home() {
               <h2 className="font-bold text-[#1A1A1A] mt-4 leading-tight text-[26px] md:text-[38px]">
                 Here&apos;s How AI Is Targeting Construction Companies Right Now
               </h2>
-              {/* Anim 4 */}
               <div className="flex justify-center">
                 <GradientLine className="mt-4" />
               </div>
             </div>
           </FadeIn>
 
-          {/* Anim 6: staggered card entrance + Anim 2: hover effects */}
-          <div
-            ref={cardsRef}
-            className="grid grid-cols-1 md:grid-cols-3 gap-6"
-          >
-            {problems.map((card, i) => (
+          {/* Skeleton → staggered cards */}
+          <AnimatePresence mode="wait">
+            {isLoading ? (
               <motion.div
-                key={card.title}
-                variants={{
-                  hidden: cardVariants[i].hidden,
-                  visible: {
-                    ...cardVariants[i].visible,
-                    transition: {
-                      duration: prefersReducedMotion ? 0 : 0.7,
-                      delay: prefersReducedMotion ? 0 : i * 0.1,
-                      ease: 'easeOut',
-                    },
-                  },
-                }}
-                initial="hidden"
-                animate={cardsInView ? 'visible' : 'hidden'}
-                whileHover={
-                  prefersReducedMotion
-                    ? {}
-                    : {
-                        y: -6,
-                        backgroundColor: '#F5F5F5',
-                        boxShadow: '0 8px 24px rgba(0,0,0,0.09)',
-                        transition: { duration: 0.3 },
-                      }
-                }
-                className="threat-card bg-white border border-[#E5E5E5] rounded-xl p-8 md:p-10"
+                key="skeleton"
+                className="grid grid-cols-1 md:grid-cols-3 gap-6"
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.2 }}
               >
-                <h3 className="font-bold text-[#1A1A1A] text-[18px] md:text-[20px]">
-                  {card.title}
-                </h3>
-                <p className="text-[#4B5563] mt-4 leading-relaxed text-[15px] md:text-[16px]">
-                  {card.text}
-                </p>
+                <SkeletonCard />
+                <SkeletonCard />
+                <SkeletonCard />
               </motion.div>
-            ))}
-          </div>
+            ) : (
+              <motion.div
+                key="cards"
+                className="grid grid-cols-1 md:grid-cols-3 gap-6"
+                variants={cardsContainerVariants}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, margin: '-60px' }}
+              >
+                {problems.map((card, i) => (
+                  <motion.div
+                    key={card.title}
+                    variants={cardVariants[i]}
+                    transition={cardTransition}
+                    whileHover={
+                      prefersReducedMotion
+                        ? {}
+                        : {
+                            y: -6,
+                            backgroundColor: '#F5F5F5',
+                            boxShadow: '0 8px 24px rgba(0,0,0,0.09)',
+                            transition: { duration: 0.3 },
+                          }
+                    }
+                    className="threat-card bg-white border border-[#E5E5E5] rounded-xl p-8 md:p-10"
+                  >
+                    <h3 className="font-bold text-[#1A1A1A] text-[18px] md:text-[20px]">
+                      {card.title}
+                    </h3>
+                    <p className="text-[#4B5563] mt-4 leading-relaxed text-[15px] md:text-[16px]">
+                      {card.text}
+                    </p>
+                  </motion.div>
+                ))}
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </motion.section>
 
@@ -199,7 +216,7 @@ export default function Home() {
         initial={{ opacity: 0.85 }}
         whileInView={{ opacity: 1 }}
         viewport={{ once: true, margin: '-40px' }}
-        transition={{ duration: prefersReducedMotion ? 0 : 0.4 }}
+        transition={sectionTransition}
       >
         <div className="max-w-7xl mx-auto">
           <FadeIn>
@@ -227,7 +244,6 @@ export default function Home() {
             {steps.map((step, i) => (
               <FadeIn key={step.number} delay={i * 0.12}>
                 <div className="flex flex-col">
-                  {/* Anim 5: number color transitions navy when step activates */}
                   <motion.span
                     className="font-bold leading-none select-none text-[56px] md:text-[64px]"
                     animate={{
@@ -256,7 +272,7 @@ export default function Home() {
         initial={{ opacity: 0.85 }}
         whileInView={{ opacity: 1 }}
         viewport={{ once: true, margin: '-40px' }}
-        transition={{ duration: prefersReducedMotion ? 0 : 0.4 }}
+        transition={sectionTransition}
       >
         <div className="max-w-3xl mx-auto text-center">
           <FadeIn>

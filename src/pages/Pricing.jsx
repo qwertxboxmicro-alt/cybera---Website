@@ -4,6 +4,7 @@ import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
 import CountUp from 'react-countup'
 import FadeIn from '../components/FadeIn'
 import GradientLine from '../components/GradientLine'
+import { SkeletonPricingTable } from '../components/SkeletonLoader'
 
 const auditFeatures = [
   '2 hours of company research',
@@ -101,6 +102,16 @@ function FAQItem({ question, answer }) {
   )
 }
 
+const pricingContainerVariants = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.12 } },
+}
+
+const pricingItemVariants = {
+  hidden: { opacity: 0, y: 28 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.55, ease: 'easeOut' } },
+}
+
 export default function Pricing() {
   useEffect(() => {
     document.title = 'Cybera Pricing | Audit & Monitoring Plans'
@@ -111,6 +122,12 @@ export default function Pricing() {
 
   const prefersReducedMotion = useReducedMotion()
 
+  const [isLoading, setIsLoading] = useState(true)
+  useEffect(() => {
+    const timer = setTimeout(() => setIsLoading(false), 600)
+    return () => clearTimeout(timer)
+  }, [])
+
   return (
     <>
       {/* ── SECTION 1: PAGE HEADER ── */}
@@ -119,7 +136,7 @@ export default function Pricing() {
         initial={{ opacity: 0.85 }}
         whileInView={{ opacity: 1 }}
         viewport={{ once: true, margin: '-40px' }}
-        transition={{ duration: prefersReducedMotion ? 0 : 0.4 }}
+        transition={{ duration: prefersReducedMotion ? 0 : 0.6 }}
       >
         <div className="max-w-3xl mx-auto text-center">
           <FadeIn>
@@ -152,12 +169,26 @@ export default function Pricing() {
         initial={{ opacity: 0.85 }}
         whileInView={{ opacity: 1 }}
         viewport={{ once: true, margin: '-40px' }}
-        transition={{ duration: prefersReducedMotion ? 0 : 0.4 }}
+        transition={{ duration: prefersReducedMotion ? 0 : 0.6 }}
       >
-        <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 items-start">
+        <div className="max-w-6xl mx-auto">
+          <AnimatePresence mode="wait">
+            {isLoading ? (
+              <motion.div key="skeleton" exit={{ opacity: 0 }} transition={{ duration: 0.2 }}>
+                <SkeletonPricingTable />
+              </motion.div>
+            ) : (
+              <motion.div
+                key="cards"
+                className="grid grid-cols-1 md:grid-cols-3 gap-8 items-start"
+                variants={pricingContainerVariants}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, margin: '-40px' }}
+              >
 
           {/* Card 1 — Team Training */}
-          <FadeIn direction="left" delay={0}>
+          <motion.div variants={pricingItemVariants}>
             <div className="border border-[#E5E5E5] rounded-2xl flex flex-col px-8 py-10 md:px-10 md:py-12">
               <p
                 className="text-[#0A2540] text-[12px] font-semibold uppercase"
@@ -195,10 +226,10 @@ export default function Pricing() {
                 Add To My Audit
               </button>
             </div>
-          </FadeIn>
+          </motion.div>
 
           {/* Card 2 — AI Fraud Audit (Most Popular) */}
-          <FadeIn direction="up" delay={0.1}>
+          <motion.div variants={pricingItemVariants}>
             <div className="border-2 border-[#0A2540] rounded-2xl flex flex-col px-8 py-10 md:px-10 md:py-12">
               <div className="flex justify-center">
                 <span className="bg-[#0A2540] text-white text-[12px] font-semibold uppercase px-4 py-1.5 rounded-full">
@@ -244,10 +275,10 @@ export default function Pricing() {
                 Book This Audit
               </Link>
             </div>
-          </FadeIn>
+          </motion.div>
 
           {/* Card 3 — Monthly Protection */}
-          <FadeIn direction="right" delay={0.2}>
+          <motion.div variants={pricingItemVariants}>
             <div className="border border-[#E5E5E5] rounded-2xl flex flex-col px-8 py-10 md:px-10 md:py-12">
               <p
                 className="text-[#0A2540] text-[12px] font-semibold uppercase"
@@ -285,8 +316,11 @@ export default function Pricing() {
                 Add To My Audit
               </button>
             </div>
-          </FadeIn>
+          </motion.div>
 
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </motion.section>
 
@@ -296,7 +330,7 @@ export default function Pricing() {
         initial={{ opacity: 0.85 }}
         whileInView={{ opacity: 1 }}
         viewport={{ once: true, margin: '-40px' }}
-        transition={{ duration: prefersReducedMotion ? 0 : 0.4 }}
+        transition={{ duration: prefersReducedMotion ? 0 : 0.6 }}
       >
         <div className="max-w-4xl mx-auto">
           <FadeIn>
@@ -330,7 +364,7 @@ export default function Pricing() {
         initial={{ opacity: 0.85 }}
         whileInView={{ opacity: 1 }}
         viewport={{ once: true, margin: '-40px' }}
-        transition={{ duration: prefersReducedMotion ? 0 : 0.4 }}
+        transition={{ duration: prefersReducedMotion ? 0 : 0.6 }}
       >
         <div className="max-w-3xl mx-auto">
           <FadeIn>
@@ -363,7 +397,7 @@ export default function Pricing() {
         initial={{ opacity: 0.85 }}
         whileInView={{ opacity: 1 }}
         viewport={{ once: true, margin: '-40px' }}
-        transition={{ duration: prefersReducedMotion ? 0 : 0.4 }}
+        transition={{ duration: prefersReducedMotion ? 0 : 0.6 }}
       >
         <div className="max-w-3xl mx-auto text-center">
           <FadeIn>

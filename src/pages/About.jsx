@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
 import FadeIn from '../components/FadeIn'
 import GradientLine from '../components/GradientLine'
+import { SkeletonLoader } from '../components/SkeletonLoader'
 
 const steps = [
   {
@@ -105,6 +106,12 @@ export default function About() {
 
   const prefersReducedMotion = useReducedMotion()
 
+  const [isLoading, setIsLoading] = useState(true)
+  useEffect(() => {
+    const timer = setTimeout(() => setIsLoading(false), 600)
+    return () => clearTimeout(timer)
+  }, [])
+
   return (
     <>
       {/* ── SECTION 1: PAGE HEADER ── */}
@@ -113,7 +120,7 @@ export default function About() {
         initial={{ opacity: 0.85 }}
         whileInView={{ opacity: 1 }}
         viewport={{ once: true, margin: '-40px' }}
-        transition={{ duration: prefersReducedMotion ? 0 : 0.4 }}
+        transition={{ duration: prefersReducedMotion ? 0 : 0.6 }}
       >
         <div className="max-w-3xl mx-auto text-center">
           <FadeIn delay={0}>
@@ -147,7 +154,7 @@ export default function About() {
         initial={{ opacity: 0.85 }}
         whileInView={{ opacity: 1 }}
         viewport={{ once: true, margin: '-40px' }}
-        transition={{ duration: prefersReducedMotion ? 0 : 0.4 }}
+        transition={{ duration: prefersReducedMotion ? 0 : 0.6 }}
       >
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-[3fr_2fr] gap-10 md:gap-16 items-start">
           <FadeIn direction="left">
@@ -192,7 +199,7 @@ export default function About() {
         initial={{ opacity: 0.85 }}
         whileInView={{ opacity: 1 }}
         viewport={{ once: true, margin: '-40px' }}
-        transition={{ duration: prefersReducedMotion ? 0 : 0.4 }}
+        transition={{ duration: prefersReducedMotion ? 0 : 0.6 }}
       >
         <div className="max-w-4xl mx-auto">
           <FadeIn>
@@ -210,31 +217,46 @@ export default function About() {
             </div>
           </FadeIn>
 
-          <div className="flex flex-col">
-            {steps.map((step, i) => (
-              <FadeIn key={step.number} delay={i * 0.08}>
-                <div>
-                  <div className="py-8 md:py-10">
-                    <p
-                      className="text-[#0A2540] text-[12px] font-bold uppercase"
-                      style={{ letterSpacing: '2px' }}
-                    >
-                      {step.number}
-                    </p>
-                    <h3 className="font-bold text-[#1A1A1A] mt-2 text-[19px] md:text-[22px]">
-                      {step.title}
-                    </h3>
-                    <p className="text-[#6B7280] mt-3 leading-relaxed max-w-2xl text-[15px] md:text-[16px]">
-                      {step.text}
-                    </p>
+          <AnimatePresence mode="wait">
+            {isLoading ? (
+              <motion.div key="skeleton" className="flex flex-col gap-2" exit={{ opacity: 0 }} transition={{ duration: 0.2 }}>
+                {[1, 2, 3, 4].map((i) => (
+                  <div key={i} className="py-8 space-y-3 border-b border-[#E5E5E5] last:border-0 animate-pulse">
+                    <SkeletonLoader height="h-3" width="w-16" />
+                    <SkeletonLoader height="h-5" width="w-2/3" />
+                    <SkeletonLoader height="h-3" className="w-full max-w-2xl" />
+                    <SkeletonLoader height="h-3" className="w-4/5 max-w-xl" />
                   </div>
-                  {i < steps.length - 1 && (
-                    <div className="border-b border-[#E5E5E5]" />
-                  )}
-                </div>
-              </FadeIn>
-            ))}
-          </div>
+                ))}
+              </motion.div>
+            ) : (
+              <motion.div key="steps" className="flex flex-col" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.4 }}>
+                {steps.map((step, i) => (
+                  <FadeIn key={step.number} delay={i * 0.08}>
+                    <div>
+                      <div className="py-8 md:py-10">
+                        <p
+                          className="text-[#0A2540] text-[12px] font-bold uppercase"
+                          style={{ letterSpacing: '2px' }}
+                        >
+                          {step.number}
+                        </p>
+                        <h3 className="font-bold text-[#1A1A1A] mt-2 text-[19px] md:text-[22px]">
+                          {step.title}
+                        </h3>
+                        <p className="text-[#6B7280] mt-3 leading-relaxed max-w-2xl text-[15px] md:text-[16px]">
+                          {step.text}
+                        </p>
+                      </div>
+                      {i < steps.length - 1 && (
+                        <div className="border-b border-[#E5E5E5]" />
+                      )}
+                    </div>
+                  </FadeIn>
+                ))}
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </motion.section>
 
@@ -244,7 +266,7 @@ export default function About() {
         initial={{ opacity: 0.85 }}
         whileInView={{ opacity: 1 }}
         viewport={{ once: true, margin: '-40px' }}
-        transition={{ duration: prefersReducedMotion ? 0 : 0.4 }}
+        transition={{ duration: prefersReducedMotion ? 0 : 0.6 }}
       >
         <div className="max-w-3xl mx-auto">
           <FadeIn>
@@ -278,7 +300,7 @@ export default function About() {
         initial={{ opacity: 0.85 }}
         whileInView={{ opacity: 1 }}
         viewport={{ once: true, margin: '-40px' }}
-        transition={{ duration: prefersReducedMotion ? 0 : 0.4 }}
+        transition={{ duration: prefersReducedMotion ? 0 : 0.6 }}
       >
         <div className="max-w-3xl mx-auto text-center">
           <FadeIn>
