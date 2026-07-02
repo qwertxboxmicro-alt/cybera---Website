@@ -97,7 +97,10 @@ function FAQItem({ question, answer }) {
 
 export default function About() {
   useEffect(() => {
-    document.title = 'About | Cybera'
+    document.title = 'About Cybera | AI Security for Construction'
+    const meta = document.querySelector('meta[name="description"]') || Object.assign(document.createElement('meta'), { name: 'description' })
+    meta.content = 'Learn how Cybera helps construction companies defend against AI fraud threats targeting the industry right now.'
+    if (!meta.parentNode) document.head.appendChild(meta)
   }, [])
 
   const prefersReducedMotion = useReducedMotion()

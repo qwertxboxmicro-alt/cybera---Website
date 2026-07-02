@@ -47,6 +47,9 @@ const cardVariants = [
 export default function Home() {
   useEffect(() => {
     document.title = 'Cybera | AI Fraud Protection for Construction Companies'
+    const meta = document.querySelector('meta[name="description"]') || Object.assign(document.createElement('meta'), { name: 'description' })
+    meta.content = 'Protect your construction company from AI-powered fraud. Voice deepfakes, fake invoices, email compromise. $3,000 audit.'
+    if (!meta.parentNode) document.head.appendChild(meta)
   }, [])
 
   const prefersReducedMotion = useReducedMotion()

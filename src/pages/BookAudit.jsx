@@ -17,7 +17,10 @@ const reassuranceItems = [
 
 export default function BookAudit() {
   useEffect(() => {
-    document.title = 'Book Your Audit | Cybera'
+    document.title = 'Book Your Free AI Security Audit | Cybera'
+    const meta = document.querySelector('meta[name="description"]') || Object.assign(document.createElement('meta'), { name: 'description' })
+    meta.content = "Schedule a 15-minute discovery call. We'll assess your construction company's AI fraud risk and show you exactly what needs to be fixed."
+    if (!meta.parentNode) document.head.appendChild(meta)
   }, [])
 
   const prefersReducedMotion = useReducedMotion()
@@ -123,7 +126,7 @@ export default function BookAudit() {
           <FadeIn direction="right" delay={0.1}>
             <div className="rounded-xl overflow-hidden" style={{ minHeight: '600px' }}>
               <iframe
-                src="https://calendly.com/qwertxboxmicro/30min"
+                src={import.meta.env.VITE_CALENDLY_URL}
                 width="100%"
                 height="600"
                 frameBorder="0"

@@ -103,7 +103,10 @@ function FAQItem({ question, answer }) {
 
 export default function Pricing() {
   useEffect(() => {
-    document.title = 'Pricing | Cybera'
+    document.title = 'Cybera Pricing | Audit & Monitoring Plans'
+    const meta = document.querySelector('meta[name="description"]') || Object.assign(document.createElement('meta'), { name: 'description' })
+    meta.content = '$3,000 AI fraud audit, $1,000/month monitoring, $500 staff training. Affordable security for construction.'
+    if (!meta.parentNode) document.head.appendChild(meta)
   }, [])
 
   const prefersReducedMotion = useReducedMotion()

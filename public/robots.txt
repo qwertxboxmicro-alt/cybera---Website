@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /.git/
+Disallow: /node_modules/
+Disallow: /*.json$
+Disallow: /**/package.json
+Disallow: /**/package-lock.json
+Disallow: /**/.env*
+
+Crawl-delay: 1
