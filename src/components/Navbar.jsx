@@ -5,6 +5,7 @@ const navLinks = [
   { label: 'Home', to: '/' },
   { label: 'About', to: '/about' },
   { label: 'Pricing', to: '/pricing' },
+  { label: 'VAPT', to: '/vapt' },
 ]
 
 export default function Navbar() {
