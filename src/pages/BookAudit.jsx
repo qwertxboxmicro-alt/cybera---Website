@@ -6,7 +6,7 @@ import { SkeletonIframe } from '../components/SkeletonLoader'
 
 const checklistItems = [
   "We'll ask about your current payment and email setup (5 min)",
-  "We'll share 3 specific AI fraud risks we identified in your company (8 min)",
+  "We'll share your exposure score across all 8 AI fraud vectors we identified in your company (8 min)",
   "You decide if you want a full audit report. Zero pressure. (2 min)",
 ]
 

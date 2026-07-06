@@ -5,18 +5,57 @@ import FadeIn from '../components/FadeIn'
 import GradientLine from '../components/GradientLine'
 import { SkeletonCard } from '../components/SkeletonLoader'
 
-const problems = [
+const coreThreats = [
   {
-    title: 'Voice Deepfake Fraud',
-    text: 'Someone clones your voice using AI. Calls your accountant posing as you. Requests an emergency wire transfer. A UK contractor lost $243,000 this way in 2023.',
+    icon: '🎙️',
+    title: 'CEO Voice Deepfake Fraud',
+    text: 'Attackers clone your CEO\'s voice from public audio and call your accountant demanding an urgent wire.',
+    impact: '$100k–500k per incident',
   },
   {
+    icon: '🧾',
     title: 'Fake Invoice Fraud',
-    text: 'AI generates perfect copies of your supplier invoices — same logo, same language, different bank account. Your team pays it without noticing.',
+    text: 'AI generates pixel-perfect copies of real supplier invoices with one changed bank digit.',
+    impact: '$5k–100k+ before detection',
   },
   {
+    icon: '📧',
     title: 'Business Email Compromise',
-    text: "AI learns how your team writes emails. Sends fake messages to suppliers changing payment details. You don't find out until money is already gone.",
+    text: 'Attackers mimic your PM\'s writing style and redirect subcontractor payments.',
+    impact: '$50k–250k per incident',
+  },
+  {
+    icon: '📁',
+    title: 'Project Data Theft',
+    text: 'Phishing steals credentials; your bids, blueprints, and pricing end up with competitors.',
+    impact: '$50k–500k per lost contract',
+  },
+]
+
+const emergingThreats = [
+  {
+    icon: '🔒',
+    title: 'Ransomware on Active Projects',
+    text: 'Site laptops and trailer machines locked mid-project, with daily delay penalties stacking.',
+    impact: '$50k–1M+ plus downtime',
+  },
+  {
+    icon: '🔗',
+    title: 'Subcontractor Compromise',
+    text: 'A breached sub becomes the attacker\'s path into your payment systems.',
+    impact: '$50k–250k via impersonated subs',
+  },
+  {
+    icon: '🎯',
+    title: 'AI Spear Phishing',
+    text: 'Flawless, personalized phishing emails built from your public footprint — no typos to catch.',
+    impact: 'Entry point for every other attack',
+  },
+  {
+    icon: '🏭',
+    title: 'Fake Supplier Fraud',
+    text: 'Synthetic vendors get onboarded and paid before anyone checks they exist.',
+    impact: '$10k–100k+ before detection',
   },
 ]
 
@@ -29,7 +68,7 @@ const steps = [
   {
     number: '02',
     title: '15-Minute Audit Call',
-    text: "We walk you through exactly what we found. You'll know your top 3 AI fraud risks by the end of the call.",
+    text: "We walk you through exactly what we found. You'll know your exposure across all 8 AI fraud vectors by the end of the call.",
   },
   {
     number: '03',
@@ -38,23 +77,18 @@ const steps = [
   },
 ]
 
-/* Anim 6: per-card directional entrance */
-const cardVariants = [
-  { hidden: { opacity: 0, x: -50 }, visible: { opacity: 1, x: 0 } },
-  { hidden: { opacity: 0, y: -30 }, visible: { opacity: 1, y: 0 } },
-  { hidden: { opacity: 0, x: 50 },  visible: { opacity: 1, x: 0 } },
-]
+const cardVariant = { hidden: { opacity: 0, y: 24 }, visible: { opacity: 1, y: 0 } }
 
 const cardsContainerVariants = {
   hidden: {},
-  visible: { transition: { staggerChildren: 0.12 } },
+  visible: { transition: { staggerChildren: 0.10 } },
 }
 
 export default function Home() {
   useEffect(() => {
     document.title = 'Cybera | AI Fraud Protection for Construction Companies'
     const meta = document.querySelector('meta[name="description"]') || Object.assign(document.createElement('meta'), { name: 'description' })
-    meta.content = 'Protect your construction company from AI-powered fraud. Voice deepfakes, fake invoices, email compromise. $3,000 audit.'
+    meta.content = 'Protect your construction company from all 8 AI fraud vectors — voice deepfakes, fake invoices, ransomware, and more. $3,000 audit.'
     if (!meta.parentNode) document.head.appendChild(meta)
   }, [])
 
@@ -131,7 +165,7 @@ export default function Home() {
         </div>
       </motion.section>
 
-      {/* ── SECTION 2: PROBLEM ── */}
+      {/* ── SECTION 2: WHAT YOUR AUDIT COVERS ── */}
       <motion.section
         className="bg-[#F5F5F5] py-[70px] md:py-[100px] px-6"
         initial={{ opacity: 0.85 }}
@@ -146,14 +180,17 @@ export default function Home() {
                 className="text-[#0A2540] text-[12px] font-semibold uppercase"
                 style={{ letterSpacing: '3px' }}
               >
-                The Threat
+                What Your Audit Covers
               </p>
               <h2 className="font-bold text-[#1A1A1A] mt-4 leading-tight text-[26px] md:text-[38px]">
-                Here&apos;s How AI Is Targeting Construction Companies Right Now
+                One Audit. All 8 AI Fraud Vectors.
               </h2>
               <div className="flex justify-center">
                 <GradientLine className="mt-4" />
               </div>
+              <p className="text-[#6B7280] mx-auto mt-5 leading-relaxed text-[16px] md:text-[18px] max-w-[620px]">
+                Every audit scores your exposure across all 8 threat categories, with a step-by-step fix list for each gap we find.
+              </p>
             </div>
           </FadeIn>
 
@@ -162,49 +199,112 @@ export default function Home() {
             {isLoading ? (
               <motion.div
                 key="skeleton"
-                className="grid grid-cols-1 md:grid-cols-3 gap-6"
+                className="grid grid-cols-1 md:grid-cols-2 gap-6"
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.2 }}
               >
-                <SkeletonCard />
-                <SkeletonCard />
-                <SkeletonCard />
-              </motion.div>
-            ) : (
-              <motion.div
-                key="cards"
-                className="grid grid-cols-1 md:grid-cols-3 gap-6"
-                variants={cardsContainerVariants}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true, margin: '-60px' }}
-              >
-                {problems.map((card, i) => (
-                  <motion.div
-                    key={card.title}
-                    variants={cardVariants[i]}
-                    transition={cardTransition}
-                    whileHover={
-                      prefersReducedMotion
-                        ? {}
-                        : {
-                            y: -6,
-                            backgroundColor: '#F5F5F5',
-                            boxShadow: '0 8px 24px rgba(0,0,0,0.09)',
-                            transition: { duration: 0.3 },
-                          }
-                    }
-                    className="threat-card bg-white border border-[#E5E5E5] rounded-xl p-8 md:p-10"
-                  >
-                    <h3 className="font-bold text-[#1A1A1A] text-[18px] md:text-[20px]">
-                      {card.title}
-                    </h3>
-                    <p className="text-[#4B5563] mt-4 leading-relaxed text-[15px] md:text-[16px]">
-                      {card.text}
-                    </p>
-                  </motion.div>
+                {Array.from({ length: 8 }).map((_, i) => (
+                  <SkeletonCard key={i} />
                 ))}
               </motion.div>
+            ) : (
+              <>
+                {/* Core Threats */}
+                <FadeIn>
+                  <p className="text-[#0A2540] text-[11px] font-semibold uppercase mb-5" style={{ letterSpacing: '2.5px' }}>
+                    Core Threats
+                  </p>
+                </FadeIn>
+                <motion.div
+                  key="core-cards"
+                  className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10"
+                  variants={cardsContainerVariants}
+                  initial="hidden"
+                  whileInView="visible"
+                  viewport={{ once: true, margin: '-60px' }}
+                >
+                  {coreThreats.map((card) => (
+                    <motion.div
+                      key={card.title}
+                      variants={cardVariant}
+                      transition={cardTransition}
+                      whileHover={
+                        prefersReducedMotion
+                          ? {}
+                          : {
+                              y: -6,
+                              backgroundColor: '#FAFAFA',
+                              boxShadow: '0 8px 24px rgba(0,0,0,0.09)',
+                              transition: { duration: 0.3 },
+                            }
+                      }
+                      className="threat-card bg-white border border-[#E5E5E5] rounded-xl p-7 md:p-8"
+                    >
+                      <span className="text-[24px] leading-none" role="img" aria-hidden="true">{card.icon}</span>
+                      <h3 className="font-bold text-[#1A1A1A] mt-3 text-[17px] md:text-[19px]">
+                        {card.title}
+                      </h3>
+                      <p className="text-[#4B5563] mt-3 leading-relaxed text-[14px] md:text-[15px]">
+                        {card.text}
+                      </p>
+                      <span className="inline-block mt-4 bg-[#0A2540] text-white text-[11px] font-semibold rounded-md px-3 py-1" style={{ letterSpacing: '0.3px' }}>
+                        Impact: {card.impact}
+                      </span>
+                    </motion.div>
+                  ))}
+                </motion.div>
+
+                {/* Emerging Threats */}
+                <FadeIn>
+                  <p className="text-[#0A2540] text-[11px] font-semibold uppercase mb-5" style={{ letterSpacing: '2.5px' }}>
+                    Emerging Threats
+                  </p>
+                </FadeIn>
+                <motion.div
+                  key="emerging-cards"
+                  className="grid grid-cols-1 md:grid-cols-2 gap-6"
+                  variants={cardsContainerVariants}
+                  initial="hidden"
+                  whileInView="visible"
+                  viewport={{ once: true, margin: '-60px' }}
+                >
+                  {emergingThreats.map((card) => (
+                    <motion.div
+                      key={card.title}
+                      variants={cardVariant}
+                      transition={cardTransition}
+                      whileHover={
+                        prefersReducedMotion
+                          ? {}
+                          : {
+                              y: -6,
+                              backgroundColor: '#FAFAFA',
+                              boxShadow: '0 8px 24px rgba(0,0,0,0.09)',
+                              transition: { duration: 0.3 },
+                            }
+                      }
+                      className="threat-card bg-white border border-[#E5E5E5] rounded-xl p-7 md:p-8"
+                    >
+                      <span className="text-[24px] leading-none" role="img" aria-hidden="true">{card.icon}</span>
+                      <h3 className="font-bold text-[#1A1A1A] mt-3 text-[17px] md:text-[19px]">
+                        {card.title}
+                      </h3>
+                      <p className="text-[#4B5563] mt-3 leading-relaxed text-[14px] md:text-[15px]">
+                        {card.text}
+                      </p>
+                      <span className="inline-block mt-4 bg-[#0A2540] text-white text-[11px] font-semibold rounded-md px-3 py-1" style={{ letterSpacing: '0.3px' }}>
+                        Impact: {card.impact}
+                      </span>
+                    </motion.div>
+                  ))}
+                </motion.div>
+
+                <FadeIn delay={0.1}>
+                  <p className="text-center text-[#9CA3AF] mt-10 text-[14px]">
+                    Each threat scored 0–100 with a clear risk level and remediation timeline.
+                  </p>
+                </FadeIn>
+              </>
             )}
           </AnimatePresence>
         </div>
