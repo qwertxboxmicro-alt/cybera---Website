@@ -4,7 +4,6 @@ import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
 import CountUp from 'react-countup'
 import FadeIn from '../components/FadeIn'
 import GradientLine from '../components/GradientLine'
-import { SkeletonPricingTable } from '../components/SkeletonLoader'
 
 const auditFeatures = [
   '2 hours of company research',
@@ -51,7 +50,7 @@ function FeatureList({ features }) {
       {features.map((f) => (
         <li
           key={f}
-          className="text-[15px] md:text-[16px] text-[#6B7280] py-2 border-b border-[#F5F5F5]"
+          className="text-[15px] md:text-[16px] text-ink-600 py-2 border-b border-paper-50"
         >
           {f}
         </li>
@@ -66,18 +65,18 @@ function FAQItem({ question, answer }) {
   const prefersReducedMotion = useReducedMotion()
 
   return (
-    <div className="border-b border-[#E5E5E5]">
+    <div className="border-b border-line-200">
       <button
         onClick={() => setOpen((o) => !o)}
         className="w-full flex items-center justify-between text-left py-6 gap-4"
       >
-        <span className="text-[16px] md:text-[18px] font-semibold text-[#1A1A1A]">
+        <span className="text-[16px] md:text-[18px] font-semibold text-ink-900">
           {question}
         </span>
         <motion.span
           animate={{ rotate: open ? 180 : 0 }}
           transition={{ duration: prefersReducedMotion ? 0 : 0.3, ease: 'easeInOut' }}
-          className="text-[#0A2540] font-bold flex-shrink-0 text-[18px] leading-none"
+          className="text-signal-600 font-bold flex-shrink-0 text-[18px] leading-none"
         >
           ▾
         </motion.span>
@@ -92,7 +91,7 @@ function FAQItem({ question, answer }) {
             transition={{ duration: prefersReducedMotion ? 0 : 0.3, ease: 'easeInOut' }}
             style={{ overflow: 'hidden' }}
           >
-            <p className="text-[15px] md:text-[16px] text-[#6B7280] leading-relaxed pb-6">
+            <p className="text-[15px] md:text-[16px] text-ink-600 leading-relaxed pb-6">
               {answer}
             </p>
           </motion.div>
@@ -112,6 +111,19 @@ const pricingItemVariants = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.55, ease: 'easeOut' } },
 }
 
+function Price({ value, className }) {
+  const prefersReducedMotion = useReducedMotion()
+  return (
+    <span className={`font-mono font-semibold text-[40px] md:text-[48px] ${className}`}>
+      {prefersReducedMotion ? (
+        `$${value.toLocaleString()}`
+      ) : (
+        <CountUp end={value} prefix="$" separator="," duration={1.5} enableScrollSpy scrollSpyOnce />
+      )}
+    </span>
+  )
+}
+
 export default function Pricing() {
   useEffect(() => {
     document.title = 'Cybera Pricing | Audit & Monitoring Plans'
@@ -122,17 +134,11 @@ export default function Pricing() {
 
   const prefersReducedMotion = useReducedMotion()
 
-  const [isLoading, setIsLoading] = useState(true)
-  useEffect(() => {
-    const timer = setTimeout(() => setIsLoading(false), 600)
-    return () => clearTimeout(timer)
-  }, [])
-
   return (
     <>
       {/* ── SECTION 1: PAGE HEADER ── */}
       <motion.section
-        className="bg-[#F5F5F5] py-[70px] md:py-[100px] px-6"
+        className="bg-paper-50 py-[70px] md:py-[100px] px-6"
         initial={{ opacity: 0.85 }}
         whileInView={{ opacity: 1 }}
         viewport={{ once: true, margin: '-40px' }}
@@ -140,15 +146,10 @@ export default function Pricing() {
       >
         <div className="max-w-3xl mx-auto text-center">
           <FadeIn>
-            <p
-              className="text-[#0A2540] text-[12px] font-semibold uppercase"
-              style={{ letterSpacing: '3px' }}
-            >
-              Pricing
-            </p>
+            <p className="eyebrow">Pricing</p>
           </FadeIn>
           <FadeIn delay={0.1}>
-            <h1 className="font-bold text-[#1A1A1A] mt-5 leading-tight text-[32px] md:text-[48px]">
+            <h1 className="font-display font-bold text-ink-900 mt-5 leading-tight text-[36px] md:text-[48px]">
               Simple, Transparent Pricing
             </h1>
             <div className="flex justify-center">
@@ -156,7 +157,7 @@ export default function Pricing() {
             </div>
           </FadeIn>
           <FadeIn delay={0.2}>
-            <p className="text-[#6B7280] mt-6 leading-relaxed text-[17px] md:text-[20px]">
+            <p className="text-ink-600 mt-6 leading-relaxed text-[17px] md:text-[20px]">
               No retainers. No surprises. Pay for exactly what you need.
             </p>
           </FadeIn>
@@ -172,161 +173,102 @@ export default function Pricing() {
         transition={{ duration: prefersReducedMotion ? 0 : 0.6 }}
       >
         <div className="max-w-6xl mx-auto">
-          <AnimatePresence mode="wait">
-            {isLoading ? (
-              <motion.div key="skeleton" exit={{ opacity: 0 }} transition={{ duration: 0.2 }}>
-                <SkeletonPricingTable />
-              </motion.div>
-            ) : (
-              <motion.div
-                key="cards"
-                className="grid grid-cols-1 md:grid-cols-3 gap-8 items-start"
-                variants={pricingContainerVariants}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true, margin: '-40px' }}
-              >
+          <motion.div
+            className="grid grid-cols-1 md:grid-cols-3 gap-8 items-start"
+            variants={pricingContainerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: '-40px' }}
+          >
 
-          {/* Card 1 — Team Training */}
-          <motion.div variants={pricingItemVariants}>
-            <div className="border border-[#E5E5E5] rounded-2xl flex flex-col px-8 py-10 md:px-10 md:py-12">
-              <p
-                className="text-[#0A2540] text-[12px] font-semibold uppercase"
-                style={{ letterSpacing: '2px' }}
-              >
-                Add-On
-              </p>
-              <h2 className="font-bold text-[#1A1A1A] mt-4 text-[24px] md:text-[28px]">
-                Team Training
-              </h2>
-              {/* Anim 3: count-up */}
-              <div className="mt-6">
-                <span className="font-bold text-[#1A1A1A] text-[40px] md:text-[48px]">
-                  {prefersReducedMotion ? (
-                    '$500'
-                  ) : (
-                    <CountUp
-                      end={500}
-                      prefix="$"
-                      separator=","
-                      duration={1.5}
-                      enableScrollSpy
-                      scrollSpyOnce
-                    />
-                  )}
-                </span>
+            {/* Card 1 — Team Training */}
+            <motion.div variants={pricingItemVariants}>
+              <div className="border border-line-200 rounded-2xl flex flex-col px-8 py-10 md:px-10 md:py-12">
+                <p className="eyebrow !tracking-[2px]">Add-On</p>
+                <h2 className="font-display font-bold text-ink-900 mt-4 text-[24px] md:text-[28px]">
+                  Team Training
+                </h2>
+                <div className="mt-6">
+                  <Price value={500} className="text-ink-900" />
+                </div>
+                <p className="text-[14px] text-ink-600">one-time</p>
+                <p className="text-[15px] md:text-[16px] text-ink-600 mt-2">
+                  Protect your people
+                </p>
+                <div className="border-t border-line-200 mt-8" />
+                <FeatureList features={trainingFeatures} />
+                <Link
+                  to="/book-audit?addon=training"
+                  className="btn-outline mt-10 w-full min-h-[48px] text-center"
+                >
+                  Add To My Audit
+                </Link>
               </div>
-              <p className="text-[14px] text-[#6B7280]">one-time</p>
-              <p className="text-[15px] md:text-[16px] text-[#6B7280] mt-2">
-                Protect your people
-              </p>
-              <div className="border-t border-[#E5E5E5] mt-8" />
-              <FeatureList features={trainingFeatures} />
-              <button className="btn-glow mt-10 w-full border-2 border-[#0A2540] text-[#0A2540] bg-white font-semibold rounded-lg py-3.5 text-[15px] md:text-[16px]">
-                Add To My Audit
-              </button>
-            </div>
+            </motion.div>
+
+            {/* Card 2 — AI Fraud Audit (Most Popular) — first on mobile */}
+            <motion.div variants={pricingItemVariants} className="order-first md:order-none">
+              <div className="border-2 border-signal-500 rounded-2xl flex flex-col px-8 py-10 md:px-10 md:py-12 shadow-xl shadow-signal-500/10 md:-translate-y-4 md:scale-[1.02]">
+                <div className="flex justify-center">
+                  <span className="bg-signal-500 text-white text-[12px] font-semibold uppercase px-4 py-1.5 rounded-full">
+                    Most Popular
+                  </span>
+                </div>
+                <p className="eyebrow !tracking-[2px] mt-4">Core Service</p>
+                <h2 className="font-display font-bold text-ink-900 mt-4 text-[24px] md:text-[28px]">
+                  AI Fraud Audit
+                </h2>
+                <div className="mt-6">
+                  <Price value={3000} className="text-steel-500" />
+                </div>
+                <p className="text-[14px] text-ink-600">one-time</p>
+                <p className="text-[15px] md:text-[16px] text-ink-600 mt-2">
+                  Start here
+                </p>
+                <div className="border-t border-line-200 mt-8" />
+                <FeatureList features={auditFeatures} />
+                <Link
+                  to="/book-audit"
+                  className="btn-primary mt-10 w-full min-h-[52px] text-center"
+                >
+                  Book This Audit
+                  <span className="cta-arrow" aria-hidden>→</span>
+                </Link>
+              </div>
+            </motion.div>
+
+            {/* Card 3 — Monthly Protection */}
+            <motion.div variants={pricingItemVariants}>
+              <div className="border border-line-200 rounded-2xl flex flex-col px-8 py-10 md:px-10 md:py-12">
+                <p className="eyebrow !tracking-[2px]">Optional</p>
+                <h2 className="font-display font-bold text-ink-900 mt-4 text-[24px] md:text-[28px]">
+                  Monthly Protection
+                </h2>
+                <div className="mt-6">
+                  <Price value={1000} className="text-ink-900" />
+                </div>
+                <p className="text-[14px] text-ink-600">per month</p>
+                <p className="text-[15px] md:text-[16px] text-ink-600 mt-2">
+                  Stay protected long-term
+                </p>
+                <div className="border-t border-line-200 mt-8" />
+                <FeatureList features={monthlyFeatures} />
+                <Link
+                  to="/book-audit?addon=monthly"
+                  className="btn-outline mt-10 w-full min-h-[48px] text-center"
+                >
+                  Add To My Audit
+                </Link>
+              </div>
+            </motion.div>
+
           </motion.div>
-
-          {/* Card 2 — AI Fraud Audit (Most Popular) */}
-          <motion.div variants={pricingItemVariants}>
-            <div className="border-2 border-[#0A2540] rounded-2xl flex flex-col px-8 py-10 md:px-10 md:py-12">
-              <div className="flex justify-center">
-                <span className="bg-[#0A2540] text-white text-[12px] font-semibold uppercase px-4 py-1.5 rounded-full">
-                  Most Popular
-                </span>
-              </div>
-              <p
-                className="text-[#0A2540] text-[12px] font-semibold uppercase mt-4"
-                style={{ letterSpacing: '2px' }}
-              >
-                Core Service
-              </p>
-              <h2 className="font-bold text-[#1A1A1A] mt-4 text-[24px] md:text-[28px]">
-                AI Fraud Audit
-              </h2>
-              {/* Anim 3: count-up in navy */}
-              <div className="mt-6">
-                <span className="font-bold text-[#0A2540] text-[40px] md:text-[48px]">
-                  {prefersReducedMotion ? (
-                    '$3,000'
-                  ) : (
-                    <CountUp
-                      end={3000}
-                      prefix="$"
-                      separator=","
-                      duration={1.5}
-                      enableScrollSpy
-                      scrollSpyOnce
-                    />
-                  )}
-                </span>
-              </div>
-              <p className="text-[14px] text-[#6B7280]">one-time</p>
-              <p className="text-[15px] md:text-[16px] text-[#6B7280] mt-2">
-                Start here
-              </p>
-              <div className="border-t border-[#E5E5E5] mt-8" />
-              <FeatureList features={auditFeatures} />
-              <Link
-                to="/book-audit"
-                className="btn-glow mt-10 w-full bg-[#0A2540] text-white font-bold rounded-lg text-center block py-4 text-[15px] md:text-[16px]"
-              >
-                Book This Audit
-              </Link>
-            </div>
-          </motion.div>
-
-          {/* Card 3 — Monthly Protection */}
-          <motion.div variants={pricingItemVariants}>
-            <div className="border border-[#E5E5E5] rounded-2xl flex flex-col px-8 py-10 md:px-10 md:py-12">
-              <p
-                className="text-[#0A2540] text-[12px] font-semibold uppercase"
-                style={{ letterSpacing: '2px' }}
-              >
-                Optional
-              </p>
-              <h2 className="font-bold text-[#1A1A1A] mt-4 text-[24px] md:text-[28px]">
-                Monthly Protection
-              </h2>
-              {/* Anim 3: count-up */}
-              <div className="mt-6">
-                <span className="font-bold text-[#1A1A1A] text-[40px] md:text-[48px]">
-                  {prefersReducedMotion ? (
-                    '$1,000'
-                  ) : (
-                    <CountUp
-                      end={1000}
-                      prefix="$"
-                      separator=","
-                      duration={1.5}
-                      enableScrollSpy
-                      scrollSpyOnce
-                    />
-                  )}
-                </span>
-              </div>
-              <p className="text-[14px] text-[#6B7280]">per month</p>
-              <p className="text-[15px] md:text-[16px] text-[#6B7280] mt-2">
-                Stay protected long-term
-              </p>
-              <div className="border-t border-[#E5E5E5] mt-8" />
-              <FeatureList features={monthlyFeatures} />
-              <button className="btn-glow mt-10 w-full border-2 border-[#0A2540] text-[#0A2540] bg-white font-semibold rounded-lg py-3.5 text-[15px] md:text-[16px]">
-                Add To My Audit
-              </button>
-            </div>
-          </motion.div>
-
-              </motion.div>
-            )}
-          </AnimatePresence>
         </div>
       </motion.section>
 
       {/* ── SECTION 3: PRICING JUSTIFICATION ── */}
       <motion.section
-        className="bg-[#F5F5F5] py-[60px] md:py-[80px] px-6"
+        className="bg-paper-50 py-[60px] md:py-[80px] px-6"
         initial={{ opacity: 0.85 }}
         whileInView={{ opacity: 1 }}
         viewport={{ once: true, margin: '-40px' }}
@@ -334,25 +276,34 @@ export default function Pricing() {
       >
         <div className="max-w-4xl mx-auto">
           <FadeIn>
-            <h2 className="font-bold text-[#1A1A1A] text-center mb-10 md:mb-12 text-[22px] md:text-[30px]">
+            <h2 className="font-display font-bold text-ink-900 text-center mb-10 md:mb-12 text-[24px] md:text-[32px]">
               Why $3,000?
             </h2>
           </FadeIn>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-16">
             <FadeIn direction="left" delay={0.05}>
-              <p className="text-[15px] md:text-[16px] text-[#6B7280] leading-relaxed">
-                A UK construction firm lost $243,000 from a single AI phone
-                call. Our audit costs $3,000. That&apos;s 1.2% of what one
-                fraud incident could cost you.
-              </p>
+              <div>
+                <p className="font-mono font-semibold text-alarm-600 text-[32px] md:text-[40px]">
+                  −$243,000
+                </p>
+                <p className="text-[15px] md:text-[16px] text-ink-600 leading-relaxed mt-3">
+                  A UK construction firm lost $243,000 from a single AI phone
+                  call. Our audit costs $3,000. That&apos;s 1.2% of what one
+                  fraud incident could cost you.
+                </p>
+              </div>
             </FadeIn>
             <FadeIn direction="right" delay={0.1}>
-              <p className="text-[15px] md:text-[16px] text-[#6B7280] leading-relaxed">
-                Hiring a cybersecurity consultant costs $150–300/hour. Our full
-                audit — research, call, report, and follow-up — would cost
-                $900–1,800 at those rates. You&apos;re getting it for $3,000
-                with a guaranteed deliverable.
-              </p>
+              <div>
+                <p className="font-mono font-semibold text-steel-500 text-[32px] md:text-[40px]">
+                  1.2%
+                </p>
+                <p className="text-[15px] md:text-[16px] text-ink-600 leading-relaxed mt-3">
+                  Hiring a cybersecurity consultant costs $150–300/hour. Our full
+                  audit — research, call, report, and follow-up — is a fixed
+                  price with a guaranteed deliverable. No hourly surprises.
+                </p>
+              </div>
             </FadeIn>
           </div>
         </div>
@@ -368,13 +319,8 @@ export default function Pricing() {
       >
         <div className="max-w-3xl mx-auto">
           <FadeIn>
-            <p
-              className="text-[#0A2540] text-[12px] font-semibold uppercase"
-              style={{ letterSpacing: '3px' }}
-            >
-              Pricing FAQ
-            </p>
-            <h2 className="font-bold text-[#1A1A1A] mt-4 mb-2 text-[22px] md:text-[30px]">
+            <p className="eyebrow">Pricing FAQ</p>
+            <h2 className="font-display font-bold text-ink-900 mt-4 mb-2 text-[24px] md:text-[32px]">
               Frequently Asked Questions
             </h2>
             <GradientLine className="mb-8" />
@@ -393,7 +339,8 @@ export default function Pricing() {
 
       {/* ── SECTION 5: CTA BANNER ── */}
       <motion.section
-        className="bg-[#0A2540] py-[70px] md:py-[100px] px-6"
+        className="bg-blueprint py-[70px] md:py-[100px] px-6"
+        style={{ background: 'linear-gradient(145deg, #0B1D33 0%, #14304F 100%)' }}
         initial={{ opacity: 0.85 }}
         whileInView={{ opacity: 1 }}
         viewport={{ once: true, margin: '-40px' }}
@@ -401,30 +348,25 @@ export default function Pricing() {
       >
         <div className="max-w-3xl mx-auto text-center">
           <FadeIn>
-            <h2 className="font-bold text-white leading-tight text-[26px] md:text-[38px]">
+            <h2 className="font-display font-bold text-white leading-tight text-[28px] md:text-[40px]">
               Start With A Free 15-Minute Audit Call
             </h2>
             <div className="flex justify-center">
               <div
                 className="mt-4 h-[3px] w-[80px] rounded-full"
-                style={{ background: 'linear-gradient(to right, rgba(255,255,255,0.8), transparent)' }}
+                style={{ background: 'linear-gradient(to right, #F05A0E, transparent)' }}
               />
             </div>
           </FadeIn>
           <FadeIn delay={0.1}>
-            <p
-              className="mt-5 leading-relaxed text-[16px] md:text-[18px]"
-              style={{ color: 'rgba(255,255,255,0.8)' }}
-            >
+            <p className="mt-5 leading-relaxed text-[16px] md:text-[18px] text-white/80">
               No payment required to book. We&apos;ll tell you what we find.
             </p>
           </FadeIn>
           <FadeIn delay={0.2}>
-            <Link
-              to="/book-audit"
-              className="btn-glow inline-block mt-10 bg-white text-[#0A2540] font-bold rounded-lg px-8 py-4 text-[15px] md:text-[16px]"
-            >
-              Book Free Call
+            <Link to="/book-audit" className="btn-primary mt-10 min-h-[52px]">
+              Book Free Audit Now
+              <span className="cta-arrow" aria-hidden>→</span>
             </Link>
           </FadeIn>
         </div>

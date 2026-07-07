@@ -9,22 +9,22 @@ const footerLinks = [
 
 export default function Footer() {
   return (
-    <footer className="bg-[#1A1A1A] text-white">
+    <footer className="bg-steel-900 text-white pb-20 sm:pb-0">
       {/* Main columns */}
       <div className="max-w-7xl mx-auto px-6 py-[60px]">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-8">
 
           {/* Left — Brand */}
           <div className="flex flex-col gap-3">
-            <p className="text-xl font-bold tracking-tight">Cybera</p>
-            <p className="text-sm text-gray-400 leading-relaxed max-w-xs">
+            <p className="font-display text-xl font-bold tracking-tight">Cybera</p>
+            <p className="text-sm text-ink-400 leading-relaxed max-w-xs">
               AI Fraud Protection for Construction Companies
             </p>
           </div>
 
           {/* Center — Links */}
           <div className="flex flex-col gap-4">
-            <p className="text-xs font-semibold uppercase tracking-widest text-gray-500">
+            <p className="text-xs font-semibold uppercase tracking-widest text-ink-400">
               Navigation
             </p>
             <nav className="flex flex-col gap-3">
@@ -32,7 +32,7 @@ export default function Footer() {
                 <Link
                   key={link.to}
                   to={link.to}
-                  className="text-sm text-white hover:text-gray-400 transition-colors duration-200 w-fit"
+                  className="text-sm text-white hover:text-signal-500 transition-colors duration-200 w-fit"
                 >
                   {link.label}
                 </Link>
@@ -42,12 +42,12 @@ export default function Footer() {
 
           {/* Right — Contact */}
           <div className="flex flex-col gap-4">
-            <p className="text-xs font-semibold uppercase tracking-widest text-gray-500">
+            <p className="text-xs font-semibold uppercase tracking-widest text-ink-400">
               Contact Us
             </p>
             <a
               href="mailto:cybera.audit@gmail.com"
-              className="text-sm text-white hover:text-gray-400 transition-colors duration-200 w-fit"
+              className="text-sm text-white hover:text-signal-500 transition-colors duration-200 w-fit"
             >
               cybera.audit@gmail.com
             </a>
@@ -57,10 +57,10 @@ export default function Footer() {
       </div>
 
       {/* Bottom bar */}
-      <div className="border-t border-gray-800">
+      <div className="border-t border-white/10">
         <div className="max-w-7xl mx-auto px-6 py-5">
-          <p className="text-xs text-gray-500 text-center md:text-left">
-            &copy; 2025 Cybera. All rights reserved.
+          <p className="text-xs text-ink-400 text-center md:text-left">
+            &copy; 2026 Cybera. All rights reserved.
           </p>
         </div>
       </div>

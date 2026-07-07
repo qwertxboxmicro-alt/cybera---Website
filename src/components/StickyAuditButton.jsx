@@ -1,31 +1,31 @@
-import { motion } from 'framer-motion'
+import { useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import { useReducedMotion } from 'framer-motion'
+import { motion, useScroll, useMotionValueEvent } from 'framer-motion'
 
-/** Animation 10: Mobile-only sticky Book Audit button */
+/** Mobile-only sticky bottom CTA bar — slides in after the user scrolls past the hero */
 export default function StickyAuditButton() {
   const { pathname } = useLocation()
-  const prefersReducedMotion = useReducedMotion()
+  const { scrollY } = useScroll()
+  const [visible, setVisible] = useState(false)
+
+  useMotionValueEvent(scrollY, 'change', (y) => {
+    setVisible(y > 480)
+  })
 
   if (pathname === '/book-audit') return null
 
   return (
     <motion.div
-      className="fixed bottom-5 right-5 z-50 sm:hidden"
-      initial={{ y: 80, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{
-        delay: prefersReducedMotion ? 0 : 0.6,
-        duration: prefersReducedMotion ? 0 : 0.4,
-        ease: 'easeOut',
-      }}
+      className="fixed bottom-0 inset-x-0 z-50 sm:hidden p-3 pb-[calc(12px+env(safe-area-inset-bottom))] bg-white/90 backdrop-blur border-t border-line-200"
+      initial={{ y: 90 }}
+      animate={{ y: visible ? 0 : 90 }}
+      transition={{ duration: 0.35, ease: 'easeOut' }}
     >
       <Link
         to="/book-audit"
-        className="btn-glow flex items-center justify-center w-14 h-14 rounded-full bg-[#0A2540] text-white font-bold text-center leading-tight"
-        style={{ boxShadow: '0 4px 20px rgba(10,37,64,0.4)', fontSize: '9px' }}
+        className="flex items-center justify-center gap-2 w-full min-h-[52px] rounded-[10px] bg-signal-500 text-white font-bold text-[16px] shadow-cta active:scale-[0.98]"
       >
-        Book<br />Audit
+        Book Free Audit <span aria-hidden>→</span>
       </Link>
     </motion.div>
   )

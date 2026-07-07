@@ -16,27 +16,57 @@ html {
 
 body {
   font-family: 'Inter', sans-serif;
-  color: #1a1a1a;
+  color: #0f172a;
   background-color: #ffffff;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  /* Slide-in entrance animations (x: ±50) must never create a horizontal scrollbar */
+  overflow-x: hidden;
 }
 
-/* ── Animation 7: CTA button glow + scale ── */
-.btn-glow {
-  transition: all 200ms ease !important;
-}
-.btn-glow:hover {
-  box-shadow: 0 0 20px rgba(10, 37, 64, 0.3);
-  transform: scale(1.03);
+@layer components {
+  /* Primary action button — signal orange, the only action color on the site */
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-[10px] bg-signal-500 px-8 py-4
+      font-bold text-white text-[16px] md:text-[17px] shadow-cta transition-all duration-200
+      hover:bg-signal-600 hover:-translate-y-0.5 hover:shadow-cta-hover active:scale-[0.98]
+      focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signal-500;
+  }
+
+  .btn-outline {
+    @apply inline-flex items-center justify-center rounded-[10px] border-2 border-steel-500 px-8 py-3.5
+      font-semibold text-steel-500 text-[15px] md:text-[16px] transition-colors duration-200
+      hover:bg-steel-500 hover:text-white
+      focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-steel-500;
+  }
+
+  .eyebrow {
+    @apply text-[12px] md:text-[13px] font-semibold uppercase tracking-[0.2em] text-signal-600;
+  }
+
+  .eyebrow-dark {
+    @apply text-[12px] md:text-[13px] font-semibold uppercase tracking-[0.2em] text-signal-500;
+  }
+
+  /* Blueprint grid texture for dark steel sections */
+  .bg-blueprint {
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+    background-size: 48px 48px;
+  }
 }
 
-/* ── Animation 2: Threat card hover ── */
+/* CTA arrow nudge on hover */
+.btn-primary .cta-arrow {
+  transition: transform 200ms ease;
+}
+.btn-primary:hover .cta-arrow {
+  transform: translateX(4px);
+}
+
+/* Threat cards — permanent alarm border, red glow on hover */
 .threat-card {
   border-left-width: 4px;
-  border-left-color: transparent;
-  transition: border-left-color 300ms ease;
-}
-.threat-card:hover {
-  border-left-color: #0a2540;
+  border-left-color: #dc2626;
 }

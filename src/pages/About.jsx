@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom'
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
 import FadeIn from '../components/FadeIn'
 import GradientLine from '../components/GradientLine'
-import { SkeletonLoader } from '../components/SkeletonLoader'
 
 const steps = [
   {
@@ -57,19 +56,19 @@ function FAQItem({ question, answer }) {
   const prefersReducedMotion = useReducedMotion()
 
   return (
-    <div className="border-b border-[#E5E5E5]">
+    <div className="border-b border-line-200">
       <button
         onClick={() => setOpen((o) => !o)}
         className="w-full flex items-center justify-between text-left py-6 gap-4"
       >
-        <span className="text-[16px] md:text-[18px] font-semibold text-[#1A1A1A]">
+        <span className="text-[16px] md:text-[18px] font-semibold text-ink-900">
           {question}
         </span>
         {/* Anim 8: chevron rotates 180° */}
         <motion.span
           animate={{ rotate: open ? 180 : 0 }}
           transition={{ duration: prefersReducedMotion ? 0 : 0.3, ease: 'easeInOut' }}
-          className="text-[#0A2540] font-bold flex-shrink-0 text-[18px] leading-none"
+          className="text-signal-600 font-bold flex-shrink-0 text-[18px] leading-none"
         >
           ▾
         </motion.span>
@@ -86,7 +85,7 @@ function FAQItem({ question, answer }) {
             transition={{ duration: prefersReducedMotion ? 0 : 0.3, ease: 'easeInOut' }}
             style={{ overflow: 'hidden' }}
           >
-            <p className="text-[15px] md:text-[16px] text-[#6B7280] leading-relaxed pb-6">
+            <p className="text-[15px] md:text-[16px] text-ink-600 leading-relaxed pb-6">
               {answer}
             </p>
           </motion.div>
@@ -106,17 +105,11 @@ export default function About() {
 
   const prefersReducedMotion = useReducedMotion()
 
-  const [isLoading, setIsLoading] = useState(true)
-  useEffect(() => {
-    const timer = setTimeout(() => setIsLoading(false), 600)
-    return () => clearTimeout(timer)
-  }, [])
-
   return (
     <>
-      {/* ── SECTION 1: PAGE HEADER ── */}
+      {/* ── SECTION 1: PAGE HEADER — dark steel band ── */}
       <motion.section
-        className="bg-[#F5F5F5] py-[70px] md:py-[100px] px-6"
+        className="bg-steel-900 bg-blueprint py-[70px] md:py-[100px] px-6"
         initial={{ opacity: 0.85 }}
         whileInView={{ opacity: 1 }}
         viewport={{ once: true, margin: '-40px' }}
@@ -124,15 +117,10 @@ export default function About() {
       >
         <div className="max-w-3xl mx-auto text-center">
           <FadeIn delay={0}>
-            <p
-              className="text-[#0A2540] text-[12px] font-semibold uppercase"
-              style={{ letterSpacing: '3px' }}
-            >
-              About Cybera
-            </p>
+            <p className="eyebrow-dark">About Cybera</p>
           </FadeIn>
           <FadeIn delay={0.1}>
-            <h1 className="font-bold text-[#1A1A1A] mt-5 leading-tight text-[32px] md:text-[48px]">
+            <h1 className="font-display font-bold text-white mt-5 leading-tight text-[36px] md:text-[48px]">
               We Help Construction Companies Eliminate AI Fraud Risk
             </h1>
             <div className="flex justify-center">
@@ -140,7 +128,7 @@ export default function About() {
             </div>
           </FadeIn>
           <FadeIn delay={0.2}>
-            <p className="text-[#6B7280] mt-6 leading-relaxed text-[17px] md:text-[20px]">
+            <p className="mt-6 leading-relaxed text-[17px] md:text-[20px] text-white/75">
               Specialised in AI-specific threats that general IT support
               doesn&apos;t cover.
             </p>
@@ -159,13 +147,8 @@ export default function About() {
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-[3fr_2fr] gap-10 md:gap-16 items-start">
           <FadeIn direction="left">
             <div>
-              <p
-                className="text-[#0A2540] text-[12px] font-semibold uppercase"
-                style={{ letterSpacing: '3px' }}
-              >
-                Why We Exist
-              </p>
-              <h2 className="font-bold text-[#1A1A1A] mt-4 leading-tight text-[26px] md:text-[34px]">
+              <p className="eyebrow">Why We Exist</p>
+              <h2 className="font-display font-bold text-ink-900 mt-4 leading-tight text-[26px] md:text-[34px]">
                 Construction Companies Are The #1 Target For AI Fraud Right Now
               </h2>
               <GradientLine className="mt-4" />
@@ -174,14 +157,14 @@ export default function About() {
 
           <FadeIn direction="right" delay={0.1}>
             <div>
-              <p className="text-[#6B7280] leading-relaxed mb-6 text-[15px] md:text-[16px]">
+              <p className="text-ink-600 leading-relaxed mb-6 text-[15px] md:text-[16px]">
                 Fraudsters know that construction companies handle massive
                 payments, have thin finance teams, and most have zero security
                 in place. AI has made it easier than ever to clone a voice,
                 generate a fake invoice, or compromise a business email — and
                 most contractors don&apos;t even know it&apos;s possible.
               </p>
-              <p className="text-[#6B7280] leading-relaxed text-[15px] md:text-[16px]">
+              <p className="text-ink-600 leading-relaxed text-[15px] md:text-[16px]">
                 Cybera was built to fix that. We audit construction companies
                 for AI-specific fraud vulnerabilities and help them close the
                 gaps before it costs them hundreds of thousands. No generic IT
@@ -193,9 +176,9 @@ export default function About() {
         </div>
       </motion.section>
 
-      {/* ── SECTION 3: THE PROCESS ── */}
+      {/* ── SECTION 3: THE PROCESS — vertical timeline rail ── */}
       <motion.section
-        className="bg-[#F5F5F5] py-[70px] md:py-[100px] px-6"
+        className="bg-paper-50 py-[70px] md:py-[100px] px-6"
         initial={{ opacity: 0.85 }}
         whileInView={{ opacity: 1 }}
         viewport={{ once: true, margin: '-40px' }}
@@ -204,59 +187,39 @@ export default function About() {
         <div className="max-w-4xl mx-auto">
           <FadeIn>
             <div className="mb-12 md:mb-14">
-              <p
-                className="text-[#0A2540] text-[12px] font-semibold uppercase"
-                style={{ letterSpacing: '3px' }}
-              >
-                The Process
-              </p>
-              <h2 className="font-bold text-[#1A1A1A] mt-4 leading-tight text-[26px] md:text-[34px]">
+              <p className="eyebrow">The Process</p>
+              <h2 className="font-display font-bold text-ink-900 mt-4 leading-tight text-[26px] md:text-[34px]">
                 What Happens When You Work With Cybera
               </h2>
               <GradientLine className="mt-4" />
             </div>
           </FadeIn>
 
-          <AnimatePresence mode="wait">
-            {isLoading ? (
-              <motion.div key="skeleton" className="flex flex-col gap-2" exit={{ opacity: 0 }} transition={{ duration: 0.2 }}>
-                {[1, 2, 3, 4].map((i) => (
-                  <div key={i} className="py-8 space-y-3 border-b border-[#E5E5E5] last:border-0 animate-pulse">
-                    <SkeletonLoader height="h-3" width="w-16" />
-                    <SkeletonLoader height="h-5" width="w-2/3" />
-                    <SkeletonLoader height="h-3" className="w-full max-w-2xl" />
-                    <SkeletonLoader height="h-3" className="w-4/5 max-w-xl" />
-                  </div>
-                ))}
-              </motion.div>
-            ) : (
-              <motion.div key="steps" className="flex flex-col" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.4 }}>
-                {steps.map((step, i) => (
-                  <FadeIn key={step.number} delay={i * 0.08}>
-                    <div>
-                      <div className="py-8 md:py-10">
-                        <p
-                          className="text-[#0A2540] text-[12px] font-bold uppercase"
-                          style={{ letterSpacing: '2px' }}
-                        >
-                          {step.number}
-                        </p>
-                        <h3 className="font-bold text-[#1A1A1A] mt-2 text-[19px] md:text-[22px]">
-                          {step.title}
-                        </h3>
-                        <p className="text-[#6B7280] mt-3 leading-relaxed max-w-2xl text-[15px] md:text-[16px]">
-                          {step.text}
-                        </p>
-                      </div>
-                      {i < steps.length - 1 && (
-                        <div className="border-b border-[#E5E5E5]" />
-                      )}
-                    </div>
-                  </FadeIn>
-                ))}
-              </motion.div>
-            )}
-          </AnimatePresence>
+          <div className="flex flex-col border-l-2 border-line-200 pl-6 md:pl-10">
+            {steps.map((step, i) => (
+              <FadeIn key={step.number} delay={i * 0.08}>
+                <div className="relative py-8 md:py-10">
+                  {/* Timeline dot */}
+                  <span
+                    className="absolute -left-[31px] md:-left-[47px] top-[38px] md:top-[46px] w-3 h-3 rounded-full bg-signal-500 ring-4 ring-signal-50"
+                    aria-hidden
+                  />
+                  <p className="font-mono text-signal-600 text-[12px] font-semibold uppercase tracking-[2px]">
+                    {step.number}
+                  </p>
+                  <h3 className="font-display font-bold text-ink-900 mt-2 text-[19px] md:text-[22px]">
+                    {step.title}
+                  </h3>
+                  <p className="text-ink-600 mt-3 leading-relaxed max-w-2xl text-[15px] md:text-[16px]">
+                    {step.text}
+                  </p>
+                  {i < steps.length - 1 && (
+                    <div className="absolute bottom-0 left-0 right-0 border-b border-line-200" />
+                  )}
+                </div>
+              </FadeIn>
+            ))}
+          </div>
         </div>
       </motion.section>
 
@@ -270,13 +233,8 @@ export default function About() {
       >
         <div className="max-w-3xl mx-auto">
           <FadeIn>
-            <p
-              className="text-[#0A2540] text-[12px] font-semibold uppercase"
-              style={{ letterSpacing: '3px' }}
-            >
-              FAQ
-            </p>
-            <h2 className="font-bold text-[#1A1A1A] mt-4 mb-10 leading-tight text-[26px] md:text-[34px]">
+            <p className="eyebrow">FAQ</p>
+            <h2 className="font-display font-bold text-ink-900 mt-4 mb-10 leading-tight text-[26px] md:text-[34px]">
               Common Questions
             </h2>
             <GradientLine className="mb-10 -mt-6" />
@@ -296,7 +254,8 @@ export default function About() {
 
       {/* ── SECTION 5: CTA BANNER ── */}
       <motion.section
-        className="bg-[#0A2540] py-[70px] md:py-[100px] px-6"
+        className="bg-blueprint py-[70px] md:py-[100px] px-6"
+        style={{ background: 'linear-gradient(145deg, #0B1D33 0%, #14304F 100%)' }}
         initial={{ opacity: 0.85 }}
         whileInView={{ opacity: 1 }}
         viewport={{ once: true, margin: '-40px' }}
@@ -304,30 +263,25 @@ export default function About() {
       >
         <div className="max-w-3xl mx-auto text-center">
           <FadeIn>
-            <h2 className="font-bold text-white leading-tight text-[26px] md:text-[38px]">
+            <h2 className="font-display font-bold text-white leading-tight text-[28px] md:text-[38px]">
               Ready To Know Where You Stand?
             </h2>
             <div className="flex justify-center">
               <div
                 className="mt-4 h-[3px] w-[80px] rounded-full"
-                style={{ background: 'linear-gradient(to right, rgba(255,255,255,0.8), transparent)' }}
+                style={{ background: 'linear-gradient(to right, #F05A0E, transparent)' }}
               />
             </div>
           </FadeIn>
           <FadeIn delay={0.1}>
-            <p
-              className="mt-5 leading-relaxed text-[16px] md:text-[18px]"
-              style={{ color: 'rgba(255,255,255,0.8)' }}
-            >
+            <p className="mt-5 leading-relaxed text-[16px] md:text-[18px] text-white/80">
               Book your free 15-minute audit call. No commitment required.
             </p>
           </FadeIn>
           <FadeIn delay={0.2}>
-            <Link
-              to="/book-audit"
-              className="btn-glow inline-block mt-10 bg-white text-[#0A2540] font-bold rounded-lg px-8 py-4 text-[15px] md:text-[16px]"
-            >
+            <Link to="/book-audit" className="btn-primary mt-10 min-h-[52px]">
               Book Free Audit
+              <span className="cta-arrow" aria-hidden>→</span>
             </Link>
           </FadeIn>
         </div>

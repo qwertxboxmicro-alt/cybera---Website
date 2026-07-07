@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
 import FadeIn from '../components/FadeIn'
 import GradientLine from '../components/GradientLine'
 import { SkeletonIframe } from '../components/SkeletonLoader'
+import { CALENDLY_URL } from '../config'
 
 const checklistItems = [
   "We'll ask about your current payment and email setup (5 min)",
@@ -25,18 +27,16 @@ export default function BookAudit() {
   }, [])
 
   const prefersReducedMotion = useReducedMotion()
+  const [searchParams] = useSearchParams()
+  const booked = searchParams.get('booked') === 'true'
 
   const [iframeLoading, setIframeLoading] = useState(true)
-  useEffect(() => {
-    const timer = setTimeout(() => setIframeLoading(false), 800)
-    return () => clearTimeout(timer)
-  }, [])
 
   return (
     <>
-      {/* ── SECTION 1: PAGE HEADER ── */}
+      {/* ── SECTION 1: PAGE HEADER — dark steel band ── */}
       <motion.section
-        className="bg-[#F5F5F5] py-[70px] md:py-[100px] px-6"
+        className="bg-steel-900 bg-blueprint py-[70px] md:py-[100px] px-6"
         initial={{ opacity: 0.85 }}
         whileInView={{ opacity: 1 }}
         viewport={{ once: true, margin: '-40px' }}
@@ -44,15 +44,10 @@ export default function BookAudit() {
       >
         <div className="max-w-3xl mx-auto text-center">
           <FadeIn delay={0}>
-            <p
-              className="text-[#0A2540] text-[12px] font-semibold uppercase"
-              style={{ letterSpacing: '3px' }}
-            >
-              Book Your Audit
-            </p>
+            <p className="eyebrow-dark">Book Your Audit</p>
           </FadeIn>
           <FadeIn delay={0.1}>
-            <h1 className="font-bold text-[#1A1A1A] mt-5 leading-tight text-[32px] md:text-[48px]">
+            <h1 className="font-display font-bold text-white mt-5 leading-tight text-[36px] md:text-[48px]">
               Book Your Free 15-Minute Audit Call
             </h1>
             <div className="flex justify-center">
@@ -60,7 +55,7 @@ export default function BookAudit() {
             </div>
           </FadeIn>
           <FadeIn delay={0.2}>
-            <p className="text-[#6B7280] mt-6 leading-relaxed mx-auto text-[17px] md:text-[20px] max-w-[560px]">
+            <p className="mt-6 leading-relaxed mx-auto text-[17px] md:text-[20px] max-w-[560px] text-white/75">
               Pick a time that works. We&apos;ll spend 15 minutes identifying
               your top AI fraud risks. No pitch. No pressure. Just honest
               advice.
@@ -69,7 +64,47 @@ export default function BookAudit() {
         </div>
       </motion.section>
 
-      {/* ── SECTION 2: TWO COLUMN LAYOUT ── */}
+      {/* ── BOOKING CONFIRMATION BANNER ── */}
+      {booked && (
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: prefersReducedMotion ? 0 : 0.4 }}
+          className="bg-verified-600/10 border-b border-verified-600/30 px-6 py-5"
+        >
+          <p className="max-w-3xl mx-auto text-center text-[15px] md:text-[16px] text-verified-600 font-semibold">
+            ✓ You&apos;re booked — check your email for the invite. We&apos;ll
+            research your company before the call.
+          </p>
+        </motion.div>
+      )}
+
+      {/* ── SECTION 2: REASSURANCE STRIP (above the ask) ── */}
+      <motion.section
+        className="bg-paper-50 py-[40px] md:py-[50px] px-6"
+        initial={{ opacity: 0.85 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true, margin: '-40px' }}
+        transition={{ duration: prefersReducedMotion ? 0 : 0.6 }}
+      >
+        <div className="max-w-4xl mx-auto grid grid-cols-3 gap-4 md:gap-10 text-center">
+          {reassuranceItems.map((item, i) => (
+            <FadeIn key={item.title} delay={i * 0.1}>
+              <div>
+                <p className="font-display font-bold text-ink-900 text-[15px] md:text-[18px]">
+                  <span className="text-verified-600 mr-1.5" aria-hidden>✓</span>
+                  {item.title}
+                </p>
+                <p className="text-ink-600 mt-2 text-[12px] md:text-[14px]">
+                  {item.text}
+                </p>
+              </div>
+            </FadeIn>
+          ))}
+        </div>
+      </motion.section>
+
+      {/* ── SECTION 3: TWO COLUMN LAYOUT ── */}
       <motion.section
         className="bg-white py-[70px] md:py-[100px] px-6"
         initial={{ opacity: 0.85 }}
@@ -82,7 +117,7 @@ export default function BookAudit() {
           {/* LEFT — What To Expect */}
           <FadeIn direction="left">
             <div>
-              <h2 className="font-bold text-[#1A1A1A] text-[20px] md:text-[22px]">
+              <h2 className="font-display font-bold text-ink-900 text-[20px] md:text-[22px]">
                 What To Expect
               </h2>
               <GradientLine className="mt-3 mb-6" />
@@ -90,40 +125,40 @@ export default function BookAudit() {
               <ul className="flex flex-col gap-5">
                 {checklistItems.map((item) => (
                   <li key={item} className="flex items-start gap-4">
-                    <span className="text-[#0A2540] font-bold text-[16px] md:text-[18px] mt-0.5 flex-shrink-0">
+                    <span className="text-verified-600 font-bold text-[16px] md:text-[18px] mt-0.5 flex-shrink-0">
                       ✓
                     </span>
-                    <span className="text-[15px] md:text-[16px] text-[#6B7280] leading-relaxed">
+                    <span className="text-[15px] md:text-[16px] text-ink-600 leading-relaxed">
                       {item}
                     </span>
                   </li>
                 ))}
               </ul>
 
-              <div className="border-t border-[#E5E5E5] mt-10 mb-10" />
+              <div className="border-t border-line-200 mt-10 mb-10" />
 
-              <h3 className="font-bold text-[#1A1A1A] text-[17px] md:text-[18px]">
+              <h3 className="font-display font-bold text-ink-900 text-[17px] md:text-[18px]">
                 Prefer Email?
               </h3>
-              <p className="text-[#6B7280] mt-2 text-[15px] md:text-[16px]">
+              <p className="text-ink-600 mt-2 text-[15px] md:text-[16px]">
                 Reach us at{' '}
                 <a
                   href="mailto:cybera.audit@gmail.com"
-                  className="text-[#0A2540] font-medium transition-colors duration-200 hover:underline"
+                  className="text-steel-500 font-medium transition-colors duration-200 hover:underline"
                 >
                   cybera.audit@gmail.com
                 </a>
               </p>
-              <p className="text-[#9CA3AF] mt-1 text-[13px] md:text-[14px]">
+              <p className="text-ink-400 mt-1 text-[13px] md:text-[14px]">
                 We respond within 24 hours.
               </p>
 
-              <div className="border-t border-[#E5E5E5] mt-10 mb-10" />
+              <div className="border-t border-line-200 mt-10 mb-10" />
 
-              <h3 className="font-bold text-[#1A1A1A] text-[17px] md:text-[18px]">
+              <h3 className="font-display font-bold text-ink-900 text-[17px] md:text-[18px]">
                 Confidentiality
               </h3>
-              <p className="text-[#6B7280] mt-2 leading-relaxed text-[15px] md:text-[16px]">
+              <p className="text-ink-600 mt-2 leading-relaxed text-[15px] md:text-[16px]">
                 All conversations are confidential. NDAs available on request.
               </p>
             </div>
@@ -131,57 +166,35 @@ export default function BookAudit() {
 
           {/* RIGHT — Calendly embed */}
           <FadeIn direction="right" delay={0.1}>
-            <AnimatePresence mode="wait">
-              {iframeLoading ? (
-                <motion.div key="iframe-skeleton" exit={{ opacity: 0 }} transition={{ duration: 0.2 }}>
-                  <SkeletonIframe />
-                </motion.div>
-              ) : (
-                <motion.div
-                  key="iframe"
-                  className="rounded-xl overflow-hidden"
-                  style={{ minHeight: '600px' }}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ duration: 0.4 }}
-                >
-                  <iframe
-                    src={import.meta.env.VITE_CALENDLY_URL}
-                    width="100%"
-                    height="600"
-                    frameBorder="0"
-                    title="Schedule your free audit"
-                    style={{ border: 'none', borderRadius: '12px' }}
-                  />
-                </motion.div>
-              )}
-            </AnimatePresence>
+            <div className="relative rounded-xl overflow-hidden" style={{ minHeight: 'clamp(620px, 80vh, 760px)' }}>
+              <AnimatePresence>
+                {iframeLoading && (
+                  <motion.div
+                    key="iframe-skeleton"
+                    className="absolute inset-0 z-10"
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <SkeletonIframe />
+                  </motion.div>
+                )}
+              </AnimatePresence>
+              <iframe
+                src={CALENDLY_URL}
+                width="100%"
+                frameBorder="0"
+                title="Schedule your free audit"
+                onLoad={() => setIframeLoading(false)}
+                style={{
+                  border: 'none',
+                  borderRadius: '12px',
+                  height: 'clamp(620px, 80vh, 760px)',
+                  width: '100%',
+                }}
+              />
+            </div>
           </FadeIn>
 
-        </div>
-      </motion.section>
-
-      {/* ── SECTION 3: REASSURANCE STRIP ── */}
-      <motion.section
-        className="bg-[#F5F5F5] py-[50px] md:py-[60px] px-6"
-        initial={{ opacity: 0.85 }}
-        whileInView={{ opacity: 1 }}
-        viewport={{ once: true, margin: '-40px' }}
-        transition={{ duration: prefersReducedMotion ? 0 : 0.6 }}
-      >
-        <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-10 text-center">
-          {reassuranceItems.map((item, i) => (
-            <FadeIn key={item.title} delay={i * 0.1}>
-              <div>
-                <p className="font-bold text-[#1A1A1A] text-[17px] md:text-[18px]">
-                  {item.title}
-                </p>
-                <p className="text-[#6B7280] mt-2 text-[13px] md:text-[14px]">
-                  {item.text}
-                </p>
-              </div>
-            </FadeIn>
-          ))}
         </div>
       </motion.section>
     </>
