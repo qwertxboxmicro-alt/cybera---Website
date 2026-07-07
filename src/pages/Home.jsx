@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { motion, useInView, useReducedMotion } from 'framer-motion'
+import { motion, AnimatePresence, useInView, useReducedMotion } from 'framer-motion'
 import CountUp from 'react-countup'
 import FadeIn from '../components/FadeIn'
 import GradientLine from '../components/GradientLine'
+import { SkeletonCard } from '../components/SkeletonLoader'
 
 /* Inline stroke icons (no extra dependency) */
 const PhoneIcon = (
@@ -97,6 +98,17 @@ export default function Home() {
   }, [])
 
   const prefersReducedMotion = useReducedMotion()
+
+  /* Skeleton loaders — show initially, hide once section enters viewport */
+  const threatsRef = useRef(null)
+  const threatsInView = useInView(threatsRef, { once: true, margin: '-60px' })
+  const [threatsLoading, setThreatsLoading] = useState(true)
+
+  useEffect(() => {
+    if (threatsInView) {
+      setThreatsLoading(false)
+    }
+  }, [threatsInView])
 
   /* Anim 5: steps sequential highlight */
   const stepsRef = useRef(null)
@@ -204,38 +216,55 @@ export default function Home() {
             </div>
           </FadeIn>
 
-          <motion.div
-            className="grid grid-cols-1 md:grid-cols-3 gap-6"
-            variants={cardsContainerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: '-60px' }}
-          >
-            {problems.map((card, i) => (
+          <AnimatePresence mode="wait">
+            {threatsLoading ? (
               <motion.div
-                key={card.title}
-                variants={cardVariants[i]}
-                transition={cardTransition}
-                className="h-full"
+                key="skeleton"
+                className="grid grid-cols-1 md:grid-cols-3 gap-6"
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.3 }}
               >
-                {/* Hover lift runs on CSS (compositor) — inner div avoids fighting Framer's inline transform */}
-                <div className="threat-card hover-lift bg-white border border-line-200 rounded-xl p-8 md:p-10 h-full">
-                  <div className="w-fit">{card.icon}</div>
-                  {card.stat && (
-                    <p className="font-mono font-semibold text-alarm-600 mt-5 text-[24px] md:text-[28px]">
-                      {card.stat}
-                    </p>
-                  )}
-                  <h3 className={`font-display font-bold text-ink-900 text-[19px] md:text-[22px] ${card.stat ? 'mt-2' : 'mt-5'}`}>
-                    {card.title}
-                  </h3>
-                  <p className="text-ink-600 mt-4 leading-relaxed text-[15px] md:text-[16px]">
-                    {card.text}
-                  </p>
-                </div>
+                <SkeletonCard />
+                <SkeletonCard />
+                <SkeletonCard />
               </motion.div>
-            ))}
-          </motion.div>
+            ) : (
+              <motion.div
+                ref={threatsRef}
+                key="cards"
+                className="grid grid-cols-1 md:grid-cols-3 gap-6"
+                variants={cardsContainerVariants}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, margin: '-60px' }}
+              >
+                {problems.map((card, i) => (
+                  <motion.div
+                    key={card.title}
+                    variants={cardVariants[i]}
+                    transition={cardTransition}
+                    className="h-full"
+                  >
+                    {/* Hover lift runs on CSS (compositor) — inner div avoids fighting Framer's inline transform */}
+                    <div className="threat-card hover-lift bg-white border border-line-200 rounded-xl p-8 md:p-10 h-full">
+                      <div className="w-fit">{card.icon}</div>
+                      {card.stat && (
+                        <p className="font-mono font-semibold text-alarm-600 mt-5 text-[24px] md:text-[28px]">
+                          {card.stat}
+                        </p>
+                      )}
+                      <h3 className={`font-display font-bold text-ink-900 text-[19px] md:text-[22px] ${card.stat ? 'mt-2' : 'mt-5'}`}>
+                        {card.title}
+                      </h3>
+                      <p className="text-ink-600 mt-4 leading-relaxed text-[15px] md:text-[16px]">
+                        {card.text}
+                      </p>
+                    </div>
+                  </motion.div>
+                ))}
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </motion.section>
 

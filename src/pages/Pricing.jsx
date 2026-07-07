@@ -1,9 +1,10 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
+import { motion, AnimatePresence, useInView, useReducedMotion } from 'framer-motion'
 import CountUp from 'react-countup'
 import FadeIn from '../components/FadeIn'
 import GradientLine from '../components/GradientLine'
+import { SkeletonPricingTable } from '../components/SkeletonLoader'
 
 const auditFeatures = [
   '2 hours of company research',
@@ -173,13 +174,21 @@ export default function Pricing() {
         transition={{ duration: prefersReducedMotion ? 0 : 0.6 }}
       >
         <div className="max-w-6xl mx-auto">
-          <motion.div
-            className="grid grid-cols-1 md:grid-cols-3 gap-8 items-start"
-            variants={pricingContainerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: '-40px' }}
-          >
+          <AnimatePresence mode="wait">
+            {pricingLoading ? (
+              <motion.div key="skeleton" exit={{ opacity: 0 }} transition={{ duration: 0.3 }}>
+                <SkeletonPricingTable />
+              </motion.div>
+            ) : (
+              <motion.div
+                ref={pricingRef}
+                key="cards"
+                className="grid grid-cols-1 md:grid-cols-3 gap-8 items-start"
+                variants={pricingContainerVariants}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, margin: '-40px' }}
+              >
 
             {/* Card 1 — Team Training */}
             <motion.div variants={pricingItemVariants}>
@@ -262,7 +271,9 @@ export default function Pricing() {
               </div>
             </motion.div>
 
-          </motion.div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </motion.section>
 
