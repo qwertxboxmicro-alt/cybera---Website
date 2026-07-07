@@ -76,11 +76,11 @@ const credibilityFacts = [
   { title: '24-Hour Response', text: 'Email us any time. A real person replies within one business day.' },
 ]
 
-/* Anim 6: per-card directional entrance */
+/* Anim 6: per-card directional entrance — gentle offsets keep the motion fluid */
 const cardVariants = [
-  { hidden: { opacity: 0, x: -50 }, visible: { opacity: 1, x: 0 } },
-  { hidden: { opacity: 0, y: -30 }, visible: { opacity: 1, y: 0 } },
-  { hidden: { opacity: 0, x: 50 },  visible: { opacity: 1, x: 0 } },
+  { hidden: { opacity: 0, x: -24 }, visible: { opacity: 1, x: 0 } },
+  { hidden: { opacity: 0, y: -20 }, visible: { opacity: 1, y: 0 } },
+  { hidden: { opacity: 0, x: 24 },  visible: { opacity: 1, x: 0 } },
 ]
 
 const cardsContainerVariants = {
@@ -112,7 +112,7 @@ export default function Home() {
   }, [stepsInView, prefersReducedMotion])
 
   const sectionTransition = { duration: prefersReducedMotion ? 0 : 0.6 }
-  const cardTransition = { duration: prefersReducedMotion ? 0 : 0.6, ease: 'easeOut' }
+  const cardTransition = { duration: prefersReducedMotion ? 0 : 0.7, ease: [0.22, 1, 0.36, 1] }
 
   return (
     <>
@@ -216,37 +216,23 @@ export default function Home() {
                 key={card.title}
                 variants={cardVariants[i]}
                 transition={cardTransition}
-                whileHover={
-                  prefersReducedMotion
-                    ? {}
-                    : {
-                        y: -6,
-                        boxShadow: '0 8px 24px rgba(220,38,38,0.12)',
-                        transition: { duration: 0.3 },
-                      }
-                }
-                className="threat-card bg-white border border-line-200 rounded-xl p-8 md:p-10"
+                className="h-full"
               >
-                <motion.div
-                  initial={prefersReducedMotion ? {} : { scale: 1 }}
-                  whileInView={prefersReducedMotion ? {} : { scale: [1, 1.12, 1] }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: i * 0.15 }}
-                  className="w-fit"
-                >
-                  {card.icon}
-                </motion.div>
-                {card.stat && (
-                  <p className="font-mono font-semibold text-alarm-600 mt-5 text-[24px] md:text-[28px]">
-                    {card.stat}
+                {/* Hover lift runs on CSS (compositor) — inner div avoids fighting Framer's inline transform */}
+                <div className="threat-card hover-lift bg-white border border-line-200 rounded-xl p-8 md:p-10 h-full">
+                  <div className="w-fit">{card.icon}</div>
+                  {card.stat && (
+                    <p className="font-mono font-semibold text-alarm-600 mt-5 text-[24px] md:text-[28px]">
+                      {card.stat}
+                    </p>
+                  )}
+                  <h3 className={`font-display font-bold text-ink-900 text-[19px] md:text-[22px] ${card.stat ? 'mt-2' : 'mt-5'}`}>
+                    {card.title}
+                  </h3>
+                  <p className="text-ink-600 mt-4 leading-relaxed text-[15px] md:text-[16px]">
+                    {card.text}
                   </p>
-                )}
-                <h3 className={`font-display font-bold text-ink-900 text-[19px] md:text-[22px] ${card.stat ? 'mt-2' : 'mt-5'}`}>
-                  {card.title}
-                </h3>
-                <p className="text-ink-600 mt-4 leading-relaxed text-[15px] md:text-[16px]">
-                  {card.text}
-                </p>
+                </div>
               </motion.div>
             ))}
           </motion.div>
@@ -284,7 +270,7 @@ export default function Home() {
               className="hidden md:block absolute top-[32px] left-[8%] right-[8%] h-[2px] bg-line-200 origin-left"
               initial={{ scaleX: 0 }}
               animate={{ scaleX: activeStep >= 0 ? (activeStep + 1) / 3 : 0 }}
-              transition={{ duration: prefersReducedMotion ? 0 : 0.4, ease: 'easeOut' }}
+              transition={{ duration: prefersReducedMotion ? 0 : 0.5, ease: 'easeInOut' }}
               aria-hidden
             />
             {steps.map((step, i) => (

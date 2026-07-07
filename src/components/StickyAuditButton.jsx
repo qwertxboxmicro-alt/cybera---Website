@@ -16,7 +16,7 @@ export default function StickyAuditButton() {
 
   return (
     <motion.div
-      className="fixed bottom-0 inset-x-0 z-50 sm:hidden p-3 pb-[calc(12px+env(safe-area-inset-bottom))] bg-white/90 backdrop-blur border-t border-line-200"
+      className="fixed bottom-0 inset-x-0 z-50 sm:hidden p-3 pb-[calc(12px+env(safe-area-inset-bottom))] bg-white/95 border-t border-line-200"
       initial={{ y: 90 }}
       animate={{ y: visible ? 0 : 90 }}
       transition={{ duration: 0.35, ease: 'easeOut' }}

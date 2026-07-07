@@ -17,10 +17,10 @@ export default function FadeIn({
   const prefersReducedMotion = useReducedMotion()
 
   const offsets = {
-    up:    { y: 28 },
-    down:  { y: -28 },
-    left:  { x: -50 },
-    right: { x: 50 },
+    up:    { y: 20 },
+    down:  { y: -20 },
+    left:  { x: -28 },
+    right: { x: 28 },
   }
 
   const hidden = { opacity: 0, x: 0, y: 0, ...offsets[direction] }
@@ -34,9 +34,9 @@ export default function FadeIn({
       initial={hidden}
       animate={isInView ? visible : hidden}
       transition={{
-        duration: prefersReducedMotion ? 0 : 0.6,
+        duration: prefersReducedMotion ? 0 : 0.7,
         delay: prefersReducedMotion ? 0 : delay,
-        ease: 'easeOut',
+        ease: [0.22, 1, 0.36, 1],
       }}
       className={className}
     >
